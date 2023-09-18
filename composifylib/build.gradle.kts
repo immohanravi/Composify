@@ -1,6 +1,9 @@
+import org.gradle.internal.impldep.org.eclipse.jgit.lib.InflaterCache.release
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("maven-publish")
 }
 
 android {
@@ -9,7 +12,8 @@ android {
 
     defaultConfig {
         minSdk = 24
-
+        var versionCode = 1
+        var versionName = "0.0.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -52,4 +56,38 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui-geometry-android:1.5.1")
+}
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("releaseaar") {
+                groupId = "com.github.immohanravi"
+                artifactId = "composifylib"
+                version = "0.0.1"
+                from(components["release"])
+                pom {
+                    name.set("Composifylib")
+                    description.set("Just a library to share all jetpack compose extensions and components. Looking for contributors")
+                    licenses {
+                        license {
+                            name.set("The Apache License, Version 2.0")
+                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set("immohanravi")
+                            name.set("Mohan Ravi")
+                            email.set("immohanravi@gmail.com")
+                        }
+                    }
+                    scm {
+                        connection.set("scm:git:github.com/immohanravi/Composify.git")
+                        developerConnection.set("scm:git:ssh://github.com/immohanravi/Composify.git")
+                        url.set("https://github.com/immohanravi/Composify/")
+                    }
+                }
+            }
+        }
+    }
 }
